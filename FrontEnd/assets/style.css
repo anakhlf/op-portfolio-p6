@@ -82,7 +82,7 @@ h2{
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 30px;
-	color: #1D6154
+	color: #1D6154;
 }
 nav ul {
 	display: flex;
@@ -137,9 +137,46 @@ li:hover {
 	width: 100%;
 
 }
+
+.categories {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	margin: 51px 0;
+	justify-content: center;
+	align-items: center;
+}
+
+.category {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	background-color: white;
+	border: 2px solid #1D6154;
+	border-radius: 50px;
+	height: 37px;
+	min-width: 75px;
+	color: #1D6154;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 0 15px;
+	cursor: pointer;
+}
+
+.category:hover {
+	background-color: #1D6154;
+	color: white;
+}
+
+.category_selected {
+	background-color: #1D6154;
+	color: white;
+}
+
 #contact {
 	width: 50%;
-margin: auto;
+	margin: auto;
 }
 #contact > * {
 	text-align: center;
