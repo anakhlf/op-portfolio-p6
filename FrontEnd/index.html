@@ -6,19 +6,77 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
-	<meta name="description" content="">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Work+Sans:ital,wght@0,300;0,400;0,500;0,800;1,700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="./assets/style.css">
 </head>
 <body>
+	<section id="modify-content-section">
+		<div id="div__modifier">
+			<i class="fa-regular fa-pen-to-square fa-xs" style="color: #ffffff;" id="#modify"></i>
+			<span>Mode édition</span>
+		</div>
+		<div id="section__publier">
+			<span>publier les changements</span>
+		</div>
+	</section>
+	<section id="section-modify-galery">
+		<div id="modale">
+			<span class="close">&times;</span>
+			<h3>Galerie photo</h3>
+			<article id="modify-galery">
+
+			</article>
+			<button id="add-photo-button">
+				Ajouter une photo
+			</button>
+			<button id="erase-galery">
+				Supprimer la gallerie
+			</button>
+		</div>
+		<div id="add-photo-section">
+			<i class="fa-solid fa-arrow-left" style="color: #000000;"></i>
+			<span class="close">&times;</span>
+			<h3>Ajout photo</h3>
+			<form id="form-add-photo">
+				<article id="add-photo-functionality">
+					<div>
+						<i class="fa-regular fa-image"></i>
+						<button>
+							+ Ajouter photo
+						</button>
+						<p>jpg, png : 4mo max</p>
+
+					</div>
+					<label for="title">Titre</label>
+					<input type="text" name="title" id="title">
+					<label for="category">Catégorie</label>
+					<select>
+						<option value="" disabled>Sélectionnez une option</option>
+						<option value="objets">Objets</option>
+						<option value="Appartements">Appartements</option>
+						<option value="hotel-restaurants">Hôtels et restaurants</option>
+					</select>
+				</article>
+				<button id="button-validate">
+					Valider
+				</button>
+			</form>
+		</div>
+	</section>
+	
 <header>
 	<h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
 	<nav>
 		<ul>
-			<li>projets</li>
-			<li>contact</li>
+			<li><a href="#portfolio">projets</a></li>
+			<li><a href="#contact">contact</a></li>
 			<li><a href="login.html">login</a></li>
-			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
+			<li><i class="fa-brands fa-instagram" style="color: #000000;" id="instagram_icone"></i></li>
 		</ul>
 	</nav>
 </header>
@@ -33,9 +91,17 @@
 			<p>Chaque projet sera étudié en commun, de façon à mettre en valeur les volumes, les matières et les couleurs dans le respect de l’esprit des lieux et le choix adapté des matériaux. Le suivi du chantier sera assuré dans le souci du détail, le respect du planning et du budget.</p>
 			<p>En cas de besoin, une équipe pluridisciplinaire peut-être constituée : architecte DPLG, décorateur(trice)</p>
 		</article>
+		<div id="mode-edition-introduction" class="mode-edition">
+			<i class="fa-regular fa-pen-to-square fa-xs" style="color: #000000;" id="#modify"></i>
+			<span>modifier</span>
+		</div>
 	</section>
 	<section id="portfolio">
 		<h2 id="h2">Mes Projets</h2>
+		<div class="mode-edition" id="mode-edition-works" >
+			<i class="fa-regular fa-pen-to-square fa-xs" style="color: #000000;" id="#modify"></i>
+			<span>modifier</span>
+		</div>
 		<div class="gallery">
 
 			
