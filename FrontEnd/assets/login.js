@@ -9,13 +9,16 @@ async function fetchLogIn() {
     try {
     const email = document.getElementById("e-mail").value;
     const pwd = document.getElementById("mot_de_passe").value;
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY1MTg3NDkzOSwiZXhwIjoxNjUxOTYxMzM5fQ.JGN1p8YIfR-M-5eQ-Ypy6Ima5cKA4VbfL2xMr2MgHm4'
     let response = await fetch("http://localhost:5678/api/users/login", {
         method: "POST",
         body: JSON.stringify({
             email: email,
             password: pwd
         }),
-        headers: { "Content-Type": "application/json" }
+        headers: { 
+            "Content-Type": "application/json", 'Authorization': `Bearer ${token}`,
+         }
         }); 
         if (response.status === 200) {
             const data = await response.json();
@@ -39,13 +42,37 @@ async function fetchLogIn() {
 
 
 
-submitButton.addEventListener("click", async () => {
+submitButton.addEventListener("click", async (event) => {
     event.preventDefault();
     fetchLogIn()
 });
 
+
+
+
+
 localStorage.setItem('isUserLoggedIn', 'true');
 
+
+
+const serveurResponse = {
+    userId: 1,
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY5NTMxNzAxNiwiZXhwIjoxNjk1NDAzNDE2fQ.RDOZWzN1Ot9ZxWnkSSlPbqKKqJ7-KtBcRTT6z1J6bKQ"
+}
+localStorage.setItem('userData', JSON.stringify(serveurResponse));
+
+
+
+const isLoggedIn= localStorage.getItem('userData') !== null;
+
+
+
+
+function unloadpage () {
+    localStorage.removeItem('userData');
+} 
+
+window.addEventListener('beforeunload', unloadpage);
 
 //email: sophie.bluel@test.tld
 //password: S0phie 

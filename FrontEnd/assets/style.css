@@ -101,6 +101,10 @@ nav li {
 
 }
 
+ul li a.active {
+	font-weight: bold;
+  }
+
 #instagram_icone {
 	width: 22px;
 }
@@ -156,12 +160,16 @@ main {
 }
 
 #portfolio {
-	text-align: center;
 	position: relative;
+	
 }
 
 #portfolio h2 {
 	display: inline-block;
+}
+
+.title-portfolio {
+	text-align: center;
 }
 
 
@@ -409,6 +417,25 @@ footer nav ul {
 	display: none;
 }
 
+.icons-change-work {
+	position:absolute;
+	font-size: 10px;
+	transform: translate(55px, -116px);
+	padding: 4px;
+	background-color: black;
+	color: white;
+	display: flex;
+	flex-direction: center;
+	align-items: center;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.fa-up-down-left-right {
+	z-index: 2;
+	transform: translate(35px, -262px);
+}
+
 .close {
 	display: inline-block;
 	position: relative;
@@ -422,6 +449,11 @@ footer nav ul {
 	text-align: center;
 	font-family: 'Work Sans' ;
 	margin-bottom: 46px;
+}
+
+#imagePreview{
+	height: 169px;
+	display: none;
 }
 
 #modify-galery {
@@ -534,12 +566,23 @@ footer nav ul {
 	margin-bottom: 10px;
 }
 
-#add-photo-functionality input, #add-photo-functionality select {
+.classicdesigninput {
 	width: 420px;
 	height: 51px;
 	border: none;
 	background-color: white;
 	box-shadow:0px 4px 14px rgba(0, 0, 0, 0.09);;
+}
+
+input, select {
+	font-size: 14px;
+	font-family: 'Work Sans';
+	padding-left: 16px;
+	color: #444444;
+}
+
+input:focus {
+	outline :none;
 }
 
 #form-add-photo {
@@ -560,4 +603,42 @@ footer nav ul {
 	cursor: pointer;
 	margin-top: 38px;
 	margin-bottom: 55px;
+	cursor: pointer;
+}
+
+#errormessage {
+	font-size: 14px;
+	font-family: 'Work Sans';
+	color: red;
+	visibility: hidden;
+	position: absolute;
+	bottom: 30px;
+}
+
+#forgetpwd {
+	cursor: pointer;
+}
+
+#fichier-nonconforme {
+	position: absolute;
+	transform: translateY(167.52px);
+	display: none;
+}
+
+#fichier-volumineux {
+	display: none;
+}
+
+.errorimage {
+	font-size: 12px;
+	font-family: 'Work Sans';
+	color: red;
+	font-style: italic;
+	font-weight: normal; 
+	margin-top: 5px;
+}
+
+.errorstyleinput {
+	border: 1px solid red;
+	height: 51px;
 }
