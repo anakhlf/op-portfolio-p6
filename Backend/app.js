@@ -25,3 +25,15 @@ app.use('/api/categories', categoriesRoutes);
 app.use('/api/works', worksRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 module.exports = app;
+
+
+
+//
+
+const corsOptions = {
+  origin: "http://127.0.0.1:5500/FrontEnd/login.html", // Remplacez par le domaine de votre site web
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: "Content-Type,Authorization",
+};
+
+app.use(cors(corsOptions));
