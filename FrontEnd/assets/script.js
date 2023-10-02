@@ -52,11 +52,16 @@ categoryAll.addEventListener("click", () => {
     
         works.forEach ((work) => {
             const project = document.createElement("figure");
+            project.id = work.id;
             project.src = work.id;
+            project.className = idCounter;
             const workImage = document.createElement("img");
-            workImage.src = work.imageUrl;
+            workImage.src = "image-" + work.imageUrl;
             const workTitle = document.createElement("p");
+            workTitle.id = "title-" + work.id;
             workTitle.textContent = work.title;
+
+            
 
             project.appendChild(workImage);
             project.appendChild(workTitle);
@@ -71,13 +76,19 @@ async function workGenerator () {
 
     const works = await fetchWorks();
 
+    let idCounter = works.length;
+
     works.forEach ((work) => {
         const project = document.createElement("figure");
+        project.id = idCounter;
+        project.className = idCounter;
         const workImage = document.createElement("img");
         workImage.src = work.imageUrl;
-        workImage.id = work.id;
+        workImage.id = "image-" + idCounter;
         const workTitle = document.createElement("p");
         workTitle.textContent = work.title;
+
+        idCounter--;
 
         project.appendChild(workImage);
         project.appendChild(workTitle);
@@ -164,37 +175,69 @@ if(isUserLoggedIn) {
 }
 
 
+const sectionModifyGalery = document.querySelector("#section-modify-galery");
+const closeButton1 = document.getElementById("close-1");
+const closeButton2 = document.getElementById("close-2");
+
+    closeButton1.addEventListener('click', function() {
+        sectionModifyGalery.style.display = "none";
+        gallery.innerHTML="";
+        workGenerator();
+      });
+    closeButton2.addEventListener('click', function() {
+        sectionModifyGalery.style.display = "none";
+        addPhotoSection.style.display = "none";
+        resetForm();
+        gallery.innerHTML="";
+        workGenerator();
+      });
+    window.addEventListener('click', function(event) {
+        if (event.target == sectionModifyGalery) {
+            sectionModifyGalery.style.display = 'none';
+            addPhotoSection.style.display = 'none';
+            resetForm();
+            gallery.innerHTML="";
+            workGenerator();
+        }
+    });
 
 
 
 
-//AFFICHER WORKS OKK 
+
+//AFFICHER WORKS MODALE OKK 
 
 async function changeWorksGenerator () {
     
-    const works = await fetchWorks();
-
-    console.log(works);
     const workMove = document.createElement("i");
     workMove.className = "fa-solid fa-up-down-left-right icons-change-work";
+    const works = await fetchWorks();
+
+    //let idCounter = works.length;
+
+    console.log(works);
+    //move
+    
 
     works.forEach ((work) => {
         const modifyGalery = document.getElementById("modify-galery");
         const changeProject = document.createElement("figure");
         changeProject.id = work.id;
-        changeProject.style.display = "inline-block";
+        changeProject.className = "change-project";
+        //changeProject.style.display = "inline-block";
         const workImage = document.createElement("img");
-        workImage.id = "imageId";
+        workImage.id = "image-" + work.id;
         workImage.src = work.imageUrl;
         workImage.style.position = "relative";
         const workTrash = document.createElement("i");
         workTrash.className = "fa-solid fa-trash-can icons-change-work";
         workTrash.id = work.id;
+        workTrashclassName = work.id;
         const workTitle = document.createElement("p");
         workTitle.innerHTML = "éditer";
         workTitle.style.marginTop = "2.42px";
-        workTitle.id = work.id;
-        workImage.id = work.id;
+        workTitle.id = "title-" + work.id;
+    
 
         changeProject.appendChild(workImage);
         changeProject.appendChild(workTitle);
@@ -202,43 +245,13 @@ async function changeWorksGenerator () {
         changeProject.prepend(workMove);
         changeProject.appendChild(workTrash);
         
-        
+        if (work.id === 1) {
+            const workMove = document.createElement("i");
+            workMove.className = "fa-solid fa-up-down-left-right";
+        }
     });
 
-    
 
-    //FONCTION SUPPRESSION 
-
-    function deleteWork(id, event) {
-        event.preventDefault();
-        //const token = localStorage.getItem('dataToken');
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY5NTY2MTY2OSwiZXhwIjoxNjk1NzQ4MDY5fQ.1jjtAQocA3PWLw53JlXcXaIBdJWNUYtbQjTtLDUQA3I";
-        const url = `http://localhost:5678/api/works/${id}`;
-        fetch(url, {
-        method: 'DELETE',
-        headers: {
-            accept: '*/*',
-            Authorization: `Bearer ${token}`,
-        },
-    })
-    .then(response => {
-        if (response.ok) {
-            console.log('Work deleted successfully');
-            const changeProject = document.getElementById(id);
-            changeProject.remove();
-
-            const project = document.getElementById(id);
-            project.remove();
-
-            }
-        else {
-            console.error('Work not deleted successfully');
-        }
-    })
-    .catch(error => {
-        console.error('Error deleting', error);
-        });
-    }
 
 
     // LIEN ID POUBELLE IMAGE OKK 
@@ -254,10 +267,62 @@ async function changeWorksGenerator () {
         });    
     };
 
-
-
 }
 
+    //FONCTION SUPPRESSION 
+
+    function deleteWork(id, event) {
+        
+        event.preventDefault();
+        const token = localStorage.getItem('dataToken');
+        const url = `http://localhost:5678/api/works/${id}`;
+        fetch(url, {
+        method: 'DELETE',
+        headers: {
+            accept: '*/*',
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then(response => {
+        if (response.ok) {
+            
+            console.log('Work deleted successfully');
+
+            const changeProject = document.getElementById(id);
+            changeProject.remove();
+            changeProject.style.display = 'none';
+            
+            
+            }
+        else {
+            console.error('Work not deleted successfully');
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting', error);
+        });
+    }
+
+//suppression gallery 
+
+const eraseGallery = document.getElementById("erase-galery");
+eraseGallery.addEventListener("click", async (event) => {
+    async function eraseGalleryFunction () {
+        try {
+            const works = await fetchWorks();
+            works.forEach ((work) => {
+                
+                deleteWork(work.id, event);
+                const modifyGalery = document.getElementById("modify-galery");
+                //modifyGalery.innerHTML = "";
+            });
+        }
+        catch (error) {
+            console.error("Erreur lors de la récupération des travaux :", error);
+        }
+    }
+    await eraseGalleryFunction();
+});
 
 // FENETRE N1 MODIFIER LES TRAVAUX OK
 
@@ -281,7 +346,7 @@ const addPhotoSection = document.getElementById("add-photo-section");
 addPhotoButton.addEventListener('click', () => {
     modale.style.display = "none";
     addPhotoSection.style.display ="flex";
-  });
+});
 
 
 //flèche retour
@@ -305,15 +370,10 @@ const fileTitle = document.getElementById('title');
 const categorySelect = document.getElementById('category');
 const sendButton = document.getElementById('button-validate')
 
-//messsage erreur
 
-const errorMessage = document.querySelector('#errormessage');
-sendButton.addEventListener('click', () => {
-    errorMessage.style.visibility = 'visible';
-    encartPhoto.classList = 'errorstyleinput';
-    fileTitle.classList = 'errorstyleinput';
-    categorySelect.classList = 'errorstyleinput';
-});
+
+
+
 
 
 // AJOUT PHOTO
@@ -364,8 +424,8 @@ categorySelect.addEventListener('change', validateForm);
 
 async function sendNewWork () {
     
-        //const token = localStorage.getItem('dataToken');
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY5NTczMjgwOCwiZXhwIjoxNjk1ODE5MjA4fQ.1RMN5p8FEOt1wrb9vnW0EADEZDvkWm-MBBQIIpVhCQs";
+        const token = localStorage.getItem('dataToken');
+        console.log(token);
         
         const fileInputFiles = fileInput.files[0];
         const fileTitleValue= fileTitle.value;
@@ -389,51 +449,26 @@ async function sendNewWork () {
             });
         
             if (newWork.ok) {
-                console.log('hello');
-
-                
                 
                 addPhotoSection.style.display = 'none';
                 modifyContentSection.style.display = "flex";
                 modale.style.display = "flex";
-
-                
-                const project = document.createElement("figure");
-                const newWorkImage = document.createElement('img');
-                const fileSrc = URL.createObjectURL(fileInputFiles);
-                newWorkImage.src = fileSrc;
-                newWorkImage.id = selectedOptionId;
-                const newWorkTitle = document.createElement("p");
-                newWorkTitle.textContent = fileTitleValue;
-                newWorkTitle.id = selectedOptionId;
-
-                project.appendChild(newWorkImage);
-                project.appendChild(newWorkTitle);
-                gallery.appendChild(project);
-                
                 const modifyGalery = document.getElementById("modify-galery");
-                const newProjectMin = document.createElement("figure");
-                const newWorkImageMin = document.createElement('img');
-                newWorkImageMin.src = fileSrc;
-                const newWorkTitleMin = document.createElement("p");
-                newWorkTitleMin.innerHTML = "éditer";
-                const workTrash = document.createElement("i");
-                workTrash.className = "fa-solid fa-trash-can icons-change-work";
-                newWorkTitleMin.style.marginTop = "2.42px";
-
-                newProjectMin.appendChild(newWorkImageMin);
-                newProjectMin.appendChild(newWorkTitleMin);
-                modifyGalery.appendChild(newProjectMin);
-                newProjectMin.appendChild(workTrash);
+                modifyGalery.innerHTML = "";
                 
+                changeWorksGenerator(); 
+                console.log("changeProject-" + selectedOptionId);
+                
+
             } else {
                 console.error('Erreur lors de la création du travail.');
             }
 
 }
 
-//Style du bouton + message erreur --------------------------------
 
+
+//Style du bouton + message erreur --------------------------------
 
 
 function validateForm() {
@@ -442,13 +477,59 @@ function validateForm() {
     const fileSelected = fileInput.files.length > 0;    
 
     if (categorySelected && titleSelected && fileSelected) {
-        //sendButton.removeAttribute('disabled');
+        errorMessage.style.visibility = 'hidden';
         errorMessage.textContent = '';
         sendButton.style.background = '#1D6154';
         sendButton.style.color = 'white';  
         
     }
+
 }
+
+
+
+
+//messsage erreur
+
+const errorMessage = document.querySelector('#errormessage');
+sendButton.addEventListener('click', () => {
+    errorMessage.style.visibility = 'visible';
+    if (fileTitle.value.trim() === '') {
+    fileTitle.classList = 'errorstyleinput';
+    }
+    if (fileInput.files.length === 0){
+    encartPhoto.classList = 'errorstyleinput';
+    }
+    if (categorySelect.value === '')
+    categorySelect.classList = 'errorstyleinput';
+    
+});
+
+// ENLEVER MESSAGE ERREUR
+
+
+fileTitle.addEventListener ('input', () => {
+    if (fileTitle.value.trim() !== '') {
+        fileTitle.classList.remove('errorstyleinput');
+        fileTitle.classList = 'classicdesigninput';
+    }
+});
+
+fileInput.addEventListener ('change', () => {
+    if (fileInput.files.length > 0) {
+        encartPhoto.classList.remove('errorstyleinput');
+        encartPhoto.classList = 'classicdesigninput';
+    }
+});
+
+categorySelect.addEventListener ('change', () => {
+    if (categorySelect.value !=''){
+        categorySelect.classList.remove('errorstyleinput');
+        categorySelect.classList = 'classicdesigninput';
+
+    }
+});
+
 
 document.addEventListener('DOMContentLoaded', function() {
     let form = document.getElementById("form-add-photo")
@@ -460,33 +541,34 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+
 //FERMER LES FENETRES ET LES REINITIALISER OK
 
 function resetForm() {
     const formAddPhoto = document.getElementById("form-add-photo");
+
+    const imagePreview = document.querySelector('#imagePreview');
+    imagePreview.style.display = 'none' ;
+    contenuEncart.style.display = "flex";
+    
+
+    const newFileInput = document.createElement("input");
+    newFileInput.type = "file";
+    newFileInput.id = "fileInput";
+    newFileInput.name = "fileInput";
+    newFileInput.style.display = "none";
+
+
+    if (fileInput.parentNode) {
+    fileInput.parentNode.replaceChild(newFileInput, fileInput);
+    }
     formAddPhoto.reset();
+    
 }
 
 
-const sectionModifyGalery = document.querySelector("#section-modify-galery");
-const closeButton1 = document.getElementById("close-1");
-const closeButton2 = document.getElementById("close-2");
-    closeButton1.addEventListener('click', function() {
-        sectionModifyGalery.style.display = "none";
-      });
-    closeButton2.addEventListener('click', function() {
-        sectionModifyGalery.style.display = "none";
-        addPhotoSection.style.display = "none";
-        resetForm();
-      });
-    window.addEventListener('click', function(event) {
-        if (event.target == sectionModifyGalery) {
-            sectionModifyGalery.style.display = 'none';
-            addPhotoSection.style.display = 'none';
-            resetForm();
-        }
-    });
 
+    // supprimer tout les console.log
+    // Relecture
 
-    //corriger message d'erreur
-    //pb rafrachissement page  
+    

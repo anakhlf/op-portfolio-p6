@@ -433,7 +433,19 @@ footer nav ul {
 
 .fa-up-down-left-right {
 	z-index: 2;
-	transform: translate(35px, -262px);
+	left : 86px;
+	top: 252px;
+	position:absolute;
+	font-size: 10px;
+	padding: 4px;
+	background-color: black;
+	color: white;
+	display: flex;
+	flex-direction: center;
+	align-items: center;
+	border-radius: 3px;
+	cursor: pointer;
+
 }
 
 .close {
@@ -567,12 +579,19 @@ footer nav ul {
 }
 
 .classicdesigninput {
-	width: 420px;
 	height: 51px;
 	border: none;
 	background-color: white;
-	box-shadow:0px 4px 14px rgba(0, 0, 0, 0.09);;
 }
+
+#title, #category {
+	box-shadow:0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+#title:focus, #category:focus {
+	border : none;
+}
+
 
 input, select {
 	font-size: 14px;
@@ -641,4 +660,8 @@ input:focus {
 .errorstyleinput {
 	border: 1px solid red;
 	height: 51px;
+}
+
+#deleted {
+	display: none;
 }

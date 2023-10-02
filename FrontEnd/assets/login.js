@@ -3,7 +3,7 @@
 const loginForm = document.getElementById("login-form");
 const submitButton = document.getElementById("submit-button");
 
-
+let data;
 
 async function fetchLogIn() {
     try {
@@ -20,8 +20,19 @@ async function fetchLogIn() {
          }
         }); 
         if (response.status === 200) {
-            const data = await response.json();
+            data = await response.json();
+
+            localStorage.setItem('data', JSON.stringify(data));
+
+            const dataToken = data.token;
+            localStorage.setItem('dataToken', dataToken);
+
             window.location.href = "index.html"    
+
+
+
+const isLoggedIn= localStorage.getItem('data') !== null;
+
         }
         else {
             const wrongPwdP = document.getElementById("wrong-pwd-p");
@@ -47,27 +58,15 @@ submitButton.addEventListener("click", async (event) => {
 });
 
 
+
 localStorage.setItem('isUserLoggedIn', 'true');
-
-
-
-const serveurResponse = {
-    userId: 1,
-    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY5NTMxNzAxNiwiZXhwIjoxNjk1NDAzNDE2fQ.RDOZWzN1Ot9ZxWnkSSlPbqKKqJ7-KtBcRTT6z1J6bKQ"
-}
-localStorage.setItem('userData', JSON.stringify(serveurResponse));
-
-
-
-const isLoggedIn= localStorage.getItem('userData') !== null;
 
 
 
 
 function unloadpage () {
-    localStorage.removeItem('userData');
+    localStorage.removeItem('data');
 } 
-
 window.addEventListener('beforeunload', unloadpage);
 
 //email: sophie.bluel@test.tld
