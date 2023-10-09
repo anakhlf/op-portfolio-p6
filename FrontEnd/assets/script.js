@@ -14,7 +14,7 @@ var modeEditionWorks = document.querySelector('#mode-edition-works');
 modeEditionWorks.insertAdjacentElement('afterend', divCategories);
 
 
-// GET Categories OK
+// GET Categories 
 
 async function fetchCategories() {
     const r = await fetch("http://localhost:5678/api/categories");
@@ -24,10 +24,9 @@ async function fetchCategories() {
     throw new Error ("Impossible de contacter le serveur")
 }
 
-fetchCategories().then(categories => console.log(categories));
 
 
-// GET Works OK
+// GET Works 
 
 async function fetchWorks() {
     const response = await fetch("http://localhost:5678/api/works");
@@ -38,12 +37,10 @@ async function fetchWorks() {
 }
 
 fetchWorks()
-    .then(works => console.log(works))
 
 
 
-
-// AFFICHER MES WORKS - pp OK
+// AFFICHER MES WORKS - pp
 
 categoryAll.addEventListener("click", () => {
     async function workGenerator () {
@@ -54,9 +51,8 @@ categoryAll.addEventListener("click", () => {
             const project = document.createElement("figure");
             project.id = work.id;
             project.src = work.id;
-            project.className = idCounter;
             const workImage = document.createElement("img");
-            workImage.src = "image-" + work.imageUrl;
+            workImage.src = work.imageUrl;
             const workTitle = document.createElement("p");
             workTitle.id = "title-" + work.id;
             workTitle.textContent = work.title;
@@ -99,7 +95,7 @@ async function workGenerator () {
 workGenerator();
 
 
-//Créer mes catégories OK
+//Créer mes catégories 
 
 async function categoriesGenerator() {
     const works = await fetchWorks();
@@ -155,23 +151,39 @@ categoriesGenerator();
 
 
 
-//CONNEXION ET AFFICHAGE OKK
+//CONNEXION ET AFFICHAGE 
 
 
 
 const isUserLoggedIn = localStorage.getItem('isUserLoggedIn');
-console.log(isUserLoggedIn)
 
 if(isUserLoggedIn) {
     const modifyContentSection = document.querySelector("#modify-content-section");
     const modeEditionIntroduction = document.querySelector("#mode-edition-introduction");
     const modeEditionWorks = document.querySelector ("#mode-edition-works");
+    const logInPage = document.getElementById("logIn-page");
+    const logInLink = document.getElementById("logIn-a");
+    logInLink.style.display = "none";
+    const logOutPage = document.createElement("p");
+    logOutPage.innerHTML = "logout";
+    logInPage.appendChild(logOutPage);
     modifyContentSection.style.display = "flex";
     modeEditionIntroduction.style.display = "flex";
     modeEditionWorks.style.display = "inline-block";
     const allCategories = document.querySelector(".categories");
     allCategories.style.visibility = "hidden";
     allCategories.style.marginTop = "-20px";
+
+    logOutPage.addEventListener("click", () => {
+        localStorage.removeItem('isUserLoggedIn');
+        logOutPage.style.display = "none";
+        logInLink.style.display = "flex";
+        modifyContentSection.style.display = "none";
+        modeEditionIntroduction.style.display = "none";
+        modeEditionWorks.style.display = "none";
+        allCategories.style.visibility = "visible";
+        allCategories.style.marginTop = "50px";
+    })
 }
 
 
@@ -205,7 +217,7 @@ const closeButton2 = document.getElementById("close-2");
 
 
 
-//AFFICHER WORKS MODALE OKK 
+//AFFICHER WORKS MODALE 
 
 async function changeWorksGenerator () {
     
@@ -213,9 +225,7 @@ async function changeWorksGenerator () {
     workMove.className = "fa-solid fa-up-down-left-right icons-change-work";
     const works = await fetchWorks();
 
-    //let idCounter = works.length;
 
-    console.log(works);
     //move
     
 
@@ -254,7 +264,7 @@ async function changeWorksGenerator () {
 
 
 
-    // LIEN ID POUBELLE IMAGE OKK 
+    // LIEN ID POUBELLE IMAGE 
 
     const workTrash = document.getElementsByClassName("icons-change-work");
     for (let i = 0; i < workTrash.length; i++) {
@@ -285,8 +295,6 @@ async function changeWorksGenerator () {
     })
     .then(response => {
         if (response.ok) {
-            
-            console.log('Work deleted successfully');
 
             const changeProject = document.getElementById(id);
             changeProject.remove();
@@ -324,7 +332,7 @@ eraseGallery.addEventListener("click", async (event) => {
     await eraseGalleryFunction();
 });
 
-// FENETRE N1 MODIFIER LES TRAVAUX OK
+// FENETRE N1 MODIFIER LES TRAVAUX 
 
 modeEditionWorks.addEventListener("click", () => {
     const sectionModifyGalery = document.querySelector("#section-modify-galery");
@@ -388,7 +396,6 @@ encartPhoto.addEventListener("click", () => {
     function handleFileUpload () {
         const imagePreview = document.querySelector('#imagePreview');
         const selectedFiles = fileInput.files;
-        console.log('Nombre de fichiers sélectionnés :', selectedFiles.length);
         if (selectedFiles.length > 0) {
             const file = selectedFiles[0];
             if (file.type === 'image/png' || file.type === 'image/jpeg')  {
@@ -396,7 +403,6 @@ encartPhoto.addEventListener("click", () => {
                     const imageUrl = URL.createObjectURL(file);
                     imagePreview.src = imageUrl;
                     imagePreview.addEventListener('load', () => {
-                    console.log('Image chargée avec succès');
                     contenuEncart.style.display = 'none';
                     imagePreview.style.display="block";
                     });
@@ -425,7 +431,6 @@ categorySelect.addEventListener('change', validateForm);
 async function sendNewWork () {
     
         const token = localStorage.getItem('dataToken');
-        console.log(token);
         
         const fileInputFiles = fileInput.files[0];
         const fileTitleValue= fileTitle.value;
@@ -438,7 +443,7 @@ async function sendNewWork () {
         formData.append('image', fileInputFiles);
         formData.append('title', fileTitleValue);
         formData.append('category', selectedOptionId);
-        console.log(formData);
+        
 
         const newWork = await fetch("http://localhost:5678/api/works", {
                 method : 'POST',
@@ -457,7 +462,6 @@ async function sendNewWork () {
                 modifyGalery.innerHTML = "";
                 
                 changeWorksGenerator(); 
-                console.log("changeProject-" + selectedOptionId);
                 
 
             } else {
@@ -468,7 +472,7 @@ async function sendNewWork () {
 
 
 
-//Style du bouton + message erreur --------------------------------
+//Style du bouton + message erreur 
 
 
 function validateForm() {
@@ -542,7 +546,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-//FERMER LES FENETRES ET LES REINITIALISER OK
+//FERMER LES FENETRES ET LES REINITIALISER 
 
 function resetForm() {
     const formAddPhoto = document.getElementById("form-add-photo");
@@ -566,9 +570,3 @@ function resetForm() {
     
 }
 
-
-
-    // supprimer tout les console.log
-    // Relecture
-
-    
