@@ -14,7 +14,7 @@ var modeEditionWorks = document.querySelector('#mode-edition-works');
 modeEditionWorks.insertAdjacentElement('afterend', divCategories);
 
 
-// GET Categories OK
+// GET Categories 
 
 async function fetchCategories() {
     const r = await fetch("http://localhost:5678/api/categories");
@@ -24,10 +24,9 @@ async function fetchCategories() {
     throw new Error ("Impossible de contacter le serveur")
 }
 
-fetchCategories().then(categories => console.log(categories));
 
 
-// GET Works OK
+// GET Works 
 
 async function fetchWorks() {
     const response = await fetch("http://localhost:5678/api/works");
@@ -38,12 +37,10 @@ async function fetchWorks() {
 }
 
 fetchWorks()
-    .then(works => console.log(works))
 
 
 
-
-// AFFICHER MES WORKS - pp OK
+// AFFICHER MES WORKS - pp
 
 categoryAll.addEventListener("click", () => {
     async function workGenerator () {
@@ -52,10 +49,15 @@ categoryAll.addEventListener("click", () => {
     
         works.forEach ((work) => {
             const project = document.createElement("figure");
+            project.id = work.id;
+            project.src = work.id;
             const workImage = document.createElement("img");
             workImage.src = work.imageUrl;
             const workTitle = document.createElement("p");
+            workTitle.id = "title-" + work.id;
             workTitle.textContent = work.title;
+
+            
 
             project.appendChild(workImage);
             project.appendChild(workTitle);
@@ -70,13 +72,19 @@ async function workGenerator () {
 
     const works = await fetchWorks();
 
+    let idCounter = works.length;
+
     works.forEach ((work) => {
         const project = document.createElement("figure");
+        project.id = idCounter;
+        project.className = idCounter;
         const workImage = document.createElement("img");
         workImage.src = work.imageUrl;
-        workImage.id = work.id;
+        workImage.id = "image-" + idCounter;
         const workTitle = document.createElement("p");
         workTitle.textContent = work.title;
+
+        idCounter--;
 
         project.appendChild(workImage);
         project.appendChild(workTitle);
@@ -87,7 +95,7 @@ async function workGenerator () {
 workGenerator();
 
 
-//Créer mes catégories OK
+//Créer mes catégories 
 
 async function categoriesGenerator() {
     const works = await fetchWorks();
@@ -143,7 +151,8 @@ categoriesGenerator();
 
 
 
-//CONNEXION ET AFFICHAGE OKK
+//CONNEXION ET AFFICHAGE 
+
 
 
 const isUserLoggedIn = localStorage.getItem('isUserLoggedIn');
@@ -152,6 +161,12 @@ if(isUserLoggedIn) {
     const modifyContentSection = document.querySelector("#modify-content-section");
     const modeEditionIntroduction = document.querySelector("#mode-edition-introduction");
     const modeEditionWorks = document.querySelector ("#mode-edition-works");
+    const logInPage = document.getElementById("logIn-page");
+    const logInLink = document.getElementById("logIn-a");
+    logInLink.style.display = "none";
+    const logOutPage = document.createElement("p");
+    logOutPage.innerHTML = "logout";
+    logInPage.appendChild(logOutPage);
     modifyContentSection.style.display = "flex";
     modeEditionIntroduction.style.display = "flex";
     modeEditionWorks.style.display = "inline-block";
@@ -159,32 +174,80 @@ if(isUserLoggedIn) {
     allCategories.style.visibility = "hidden";
     allCategories.style.marginTop = "-20px";
 
+    logOutPage.addEventListener("click", () => {
+        localStorage.removeItem('isUserLoggedIn');
+        logOutPage.style.display = "none";
+        logInLink.style.display = "flex";
+        modifyContentSection.style.display = "none";
+        modeEditionIntroduction.style.display = "none";
+        modeEditionWorks.style.display = "none";
+        allCategories.style.visibility = "visible";
+        allCategories.style.marginTop = "50px";
+    })
 }
 
-//AFFICHER WORKS OKK 
+
+const sectionModifyGalery = document.querySelector("#section-modify-galery");
+const closeButton1 = document.getElementById("close-1");
+const closeButton2 = document.getElementById("close-2");
+
+    closeButton1.addEventListener('click', function() {
+        sectionModifyGalery.style.display = "none";
+        gallery.innerHTML="";
+        workGenerator();
+      });
+    closeButton2.addEventListener('click', function() {
+        sectionModifyGalery.style.display = "none";
+        addPhotoSection.style.display = "none";
+        resetForm();
+        gallery.innerHTML="";
+        workGenerator();
+      });
+    window.addEventListener('click', function(event) {
+        if (event.target == sectionModifyGalery) {
+            sectionModifyGalery.style.display = 'none';
+            addPhotoSection.style.display = 'none';
+            resetForm();
+            gallery.innerHTML="";
+            workGenerator();
+        }
+    });
+
+
+
+
+
+//AFFICHER WORKS MODALE 
 
 async function changeWorksGenerator () {
     
-    const works = await fetchWorks();
-
-    console.log(works);
     const workMove = document.createElement("i");
     workMove.className = "fa-solid fa-up-down-left-right icons-change-work";
+    const works = await fetchWorks();
+
+
+    //move
+    
 
     works.forEach ((work) => {
         const modifyGalery = document.getElementById("modify-galery");
         const changeProject = document.createElement("figure");
-        changeProject.style.display = "inline-block";
+        changeProject.id = work.id;
+        changeProject.className = "change-project";
+        //changeProject.style.display = "inline-block";
         const workImage = document.createElement("img");
+        workImage.id = "image-" + work.id;
         workImage.src = work.imageUrl;
         workImage.style.position = "relative";
         const workTrash = document.createElement("i");
         workTrash.className = "fa-solid fa-trash-can icons-change-work";
         workTrash.id = work.id;
+        workTrashclassName = work.id;
         const workTitle = document.createElement("p");
         workTitle.innerHTML = "éditer";
         workTitle.style.marginTop = "2.42px";
-        workImage.id = work.id;
+        workTitle.id = "title-" + work.id;
+    
 
         changeProject.appendChild(workImage);
         changeProject.appendChild(workTitle);
@@ -192,38 +255,52 @@ async function changeWorksGenerator () {
         changeProject.prepend(workMove);
         changeProject.appendChild(workTrash);
         
+        if (work.id === 1) {
+            const workMove = document.createElement("i");
+            workMove.className = "fa-solid fa-up-down-left-right";
+        }
     });
 
-    
 
-    // LIEN ID POUBELLE IMAGE OKK 
+
+
+    // LIEN ID POUBELLE IMAGE 
 
     const workTrash = document.getElementsByClassName("icons-change-work");
     for (let i = 0; i < workTrash.length; i++) {
         const trash = workTrash[i];
 
-        trash.addEventListener('click', () => {
-
-        const id = trash.id;
-        deleteWork(id);
-    });    
+        trash.addEventListener('click',function(event) {
+            event.preventDefault(); 
+            const id = trash.id;
+            deleteWork(id, event);
+        });    
     };
+
+}
 
     //FONCTION SUPPRESSION 
 
-    function deleteWork(id) {
+    function deleteWork(id, event) {
+        
+        event.preventDefault();
+        const token = localStorage.getItem('dataToken');
         const url = `http://localhost:5678/api/works/${id}`;
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY5NTM3NzY0MCwiZXhwIjoxNjk1NDY0MDQwfQ.BW7tnSknwfyYvpT83nWXP-oTfZvjnVy2BDwD8yfX8BM'
         fetch(url, {
         method: 'DELETE',
         headers: {
-            'accept': '*/*',
-            'Authorization': `Bearer ${token}`,
+            accept: '*/*',
+            Authorization: `Bearer ${token}`,
         },
     })
     .then(response => {
         if (response.ok) {
-            console.log('Work deleted successfully');
+
+            const changeProject = document.getElementById(id);
+            changeProject.remove();
+            changeProject.style.display = 'none';
+            
+            
             }
         else {
             console.error('Work not deleted successfully');
@@ -233,10 +310,29 @@ async function changeWorksGenerator () {
         console.error('Error deleting', error);
         });
     }
-}
 
+//suppression gallery 
 
-// FENETRE N1 MODIFIER LES TRAVAUX OK
+const eraseGallery = document.getElementById("erase-galery");
+eraseGallery.addEventListener("click", async (event) => {
+    async function eraseGalleryFunction () {
+        try {
+            const works = await fetchWorks();
+            works.forEach ((work) => {
+                
+                deleteWork(work.id, event);
+                const modifyGalery = document.getElementById("modify-galery");
+                //modifyGalery.innerHTML = "";
+            });
+        }
+        catch (error) {
+            console.error("Erreur lors de la récupération des travaux :", error);
+        }
+    }
+    await eraseGalleryFunction();
+});
+
+// FENETRE N1 MODIFIER LES TRAVAUX 
 
 modeEditionWorks.addEventListener("click", () => {
     const sectionModifyGalery = document.querySelector("#section-modify-galery");
@@ -258,7 +354,7 @@ const addPhotoSection = document.getElementById("add-photo-section");
 addPhotoButton.addEventListener('click', () => {
     modale.style.display = "none";
     addPhotoSection.style.display ="flex";
-  });
+});
 
 
 //flèche retour
@@ -272,6 +368,8 @@ arrowLeft.addEventListener('click', () => {
 
 // REMPLISSAGE FORM
 
+const modifyContentSection = document.getElementById("section-modify-galery")
+const modale = document.getElementById("modale");
 const buttonAddPhoto = document.getElementById("button-add-photo");
 const fileInput = document.getElementById('fileInput');
 const encartPhoto = document.getElementById('encart-photo');
@@ -280,15 +378,10 @@ const fileTitle = document.getElementById('title');
 const categorySelect = document.getElementById('category');
 const sendButton = document.getElementById('button-validate')
 
-//messsage erreur
 
-const errorMessage = document.querySelector('#errormessage');
-sendButton.addEventListener('click', () => {
-    errorMessage.style.visibility = 'visible';
-    encartPhoto.classList = 'errorstyleinput';
-    fileTitle.classList = 'errorstyleinput';
-    categorySelect.classList = 'errorstyleinput';
-});
+
+
+
 
 
 // AJOUT PHOTO
@@ -303,7 +396,6 @@ encartPhoto.addEventListener("click", () => {
     function handleFileUpload () {
         const imagePreview = document.querySelector('#imagePreview');
         const selectedFiles = fileInput.files;
-        console.log('Nombre de fichiers sélectionnés :', selectedFiles.length);
         if (selectedFiles.length > 0) {
             const file = selectedFiles[0];
             if (file.type === 'image/png' || file.type === 'image/jpeg')  {
@@ -311,7 +403,6 @@ encartPhoto.addEventListener("click", () => {
                     const imageUrl = URL.createObjectURL(file);
                     imagePreview.src = imageUrl;
                     imagePreview.addEventListener('load', () => {
-                    console.log('Image chargée avec succès');
                     contenuEncart.style.display = 'none';
                     imagePreview.style.display="block";
                     });
@@ -333,103 +424,149 @@ categorySelect.addEventListener('change', validateForm);
 
 
 
+
 // VALIDER LE FORMULAIRE FONCTION
 
 
-
 async function sendNewWork () {
-    try {
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY5NTM3NzY0MCwiZXhwIjoxNjk1NDY0MDQwfQ.BW7tnSknwfyYvpT83nWXP-oTfZvjnVy2BDwD8yfX8BM'
-        const formData = new FormData();
-        console.log(fileInput.files[0]);
-        const f = fileInput.files[0]; 
-        let binaryFile;
+    
+        const token = localStorage.getItem('dataToken');
         
-        if (f) {
-        const reader = new FileReader();
-        reader.onload = function(evt) { 
-            const metadata = `name: ${f.name}, type: ${f.type}, size: ${f.size}, contents:`;
-            const contents = evt.target.result;
-            console.log(metadata, contents);
-        }
-        binaryFile = reader.readAsDataURL(f);
-        console.log(binaryFile);
-        }
-            formData.append('image', binaryFile);
-            formData.append('title', fileTitle.value);
-            formData.append('category', categorySelect.value);
-        let newWork = await fetch("http://localhost:5678/api/works", {
-            method : 'POST',
-            body: formData,
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                'accept': 'application/json',
-                'Authorization': `Bearer ${token}`,
+        const fileInputFiles = fileInput.files[0];
+        const fileTitleValue= fileTitle.value;
+        const categorySelectValue = categorySelect.value;
+        const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+        const selectedOptionId = selectedOption.id;
+
+
+        const formData = new FormData();    
+        formData.append('image', fileInputFiles);
+        formData.append('title', fileTitleValue);
+        formData.append('category', selectedOptionId);
+        
+
+        const newWork = await fetch("http://localhost:5678/api/works", {
+                method : 'POST',
+                body: formData,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+        
+            if (newWork.ok) {
+                
+                addPhotoSection.style.display = 'none';
+                modifyContentSection.style.display = "flex";
+                modale.style.display = "flex";
+                const modifyGalery = document.getElementById("modify-galery");
+                modifyGalery.innerHTML = "";
+                
+                changeWorksGenerator(); 
+                
+
+            } else {
+                console.error('Erreur lors de la création du travail.');
             }
-        });
-        
-        if (newWork.ok === true) {
-            console.log(hello)
-        }
-    }
-    catch (error) {
-        console.error("Erreur :", error);
-    }
+
 }
 
 
 
-//Style du bouton + message erreur --------------------------------
-
+//Style du bouton + message erreur 
 
 
 function validateForm() {
-    const formAddPhoto = document.querySelector('#form-add-photo');
-    const addPhotoSection =document.getElementById('form-add-photo');
     const categorySelected = categorySelect.value !='';
     const titleSelected = fileTitle.value.trim() !== '';
     const fileSelected = fileInput.files.length > 0;    
 
     if (categorySelected && titleSelected && fileSelected) {
-        //sendButton.removeAttribute('disabled');
+        errorMessage.style.visibility = 'hidden';
         errorMessage.textContent = '';
         sendButton.style.background = '#1D6154';
-        sendButton.style.color = 'white';     
-        sendButton.addEventListener('click', function(event) {
-            event.preventDefault();
-            sendNewWork () 
-        });
+        sendButton.style.color = 'white';  
+        
     }
+
 }
 
 
 
-//FERMER LES FENETRES ET LES REINITIALISER OK
+
+//messsage erreur
+
+const errorMessage = document.querySelector('#errormessage');
+sendButton.addEventListener('click', () => {
+    errorMessage.style.visibility = 'visible';
+    if (fileTitle.value.trim() === '') {
+    fileTitle.classList = 'errorstyleinput';
+    }
+    if (fileInput.files.length === 0){
+    encartPhoto.classList = 'errorstyleinput';
+    }
+    if (categorySelect.value === '')
+    categorySelect.classList = 'errorstyleinput';
+    
+});
+
+// ENLEVER MESSAGE ERREUR
+
+
+fileTitle.addEventListener ('input', () => {
+    if (fileTitle.value.trim() !== '') {
+        fileTitle.classList.remove('errorstyleinput');
+        fileTitle.classList = 'classicdesigninput';
+    }
+});
+
+fileInput.addEventListener ('change', () => {
+    if (fileInput.files.length > 0) {
+        encartPhoto.classList.remove('errorstyleinput');
+        encartPhoto.classList = 'classicdesigninput';
+    }
+});
+
+categorySelect.addEventListener ('change', () => {
+    if (categorySelect.value !=''){
+        categorySelect.classList.remove('errorstyleinput');
+        categorySelect.classList = 'classicdesigninput';
+
+    }
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    let form = document.getElementById("form-add-photo")
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();     
+            sendNewWork (); 
+    
+    });
+});
+
+
+
+//FERMER LES FENETRES ET LES REINITIALISER 
 
 function resetForm() {
     const formAddPhoto = document.getElementById("form-add-photo");
+
+    const imagePreview = document.querySelector('#imagePreview');
+    imagePreview.style.display = 'none' ;
+    contenuEncart.style.display = "flex";
+    
+
+    const newFileInput = document.createElement("input");
+    newFileInput.type = "file";
+    newFileInput.id = "fileInput";
+    newFileInput.name = "fileInput";
+    newFileInput.style.display = "none";
+
+
+    if (fileInput.parentNode) {
+    fileInput.parentNode.replaceChild(newFileInput, fileInput);
+    }
     formAddPhoto.reset();
+    
 }
 
-
-const sectionModifyGalery = document.querySelector("#section-modify-galery");
-const closeButton1 = document.getElementById("close-1");
-const closeButton2 = document.getElementById("close-2");
-    closeButton1.addEventListener('click', function() {
-        sectionModifyGalery.style.display = "none";
-      });
-    closeButton2.addEventListener('click', function() {
-        sectionModifyGalery.style.display = "none";
-        addPhotoSection.style.display = "none";
-        resetForm();
-      });
-    window.addEventListener('click', function(event) {
-        if (event.target == sectionModifyGalery) {
-            sectionModifyGalery.style.display = 'none';
-            addPhotoSection.style.display = 'none';
-            resetForm();
-        }
-    });
-
-
-    //corriger message d'erreur  
