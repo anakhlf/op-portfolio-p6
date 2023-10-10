@@ -224,9 +224,6 @@ async function changeWorksGenerator () {
     const workMove = document.createElement("i");
     workMove.className = "fa-solid fa-up-down-left-right icons-change-work";
     const works = await fetchWorks();
-
-
-    //move
     
 
     works.forEach ((work) => {
@@ -252,13 +249,10 @@ async function changeWorksGenerator () {
         changeProject.appendChild(workImage);
         changeProject.appendChild(workTitle);
         modifyGalery.appendChild(changeProject);
-        changeProject.prepend(workMove);
+        modifyGalery.prepend(workMove);
         changeProject.appendChild(workTrash);
         
-        if (work.id === 1) {
-            const workMove = document.createElement("i");
-            workMove.className = "fa-solid fa-up-down-left-right";
-        }
+        
     });
 
 
