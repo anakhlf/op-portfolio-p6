@@ -223,6 +223,7 @@ async function changeWorksGenerator () {
     
     const workMove = document.createElement("i");
     workMove.className = "fa-solid fa-up-down-left-right icons-change-work";
+    workMove.id = "work-move";
     const works = await fetchWorks();
     
 
@@ -231,7 +232,6 @@ async function changeWorksGenerator () {
         const changeProject = document.createElement("figure");
         changeProject.id = work.id;
         changeProject.className = "change-project";
-        //changeProject.style.display = "inline-block";
         const workImage = document.createElement("img");
         workImage.id = "image-" + work.id;
         workImage.src = work.imageUrl;
@@ -316,7 +316,8 @@ eraseGallery.addEventListener("click", async (event) => {
                 
                 deleteWork(work.id, event);
                 const modifyGalery = document.getElementById("modify-galery");
-                //modifyGalery.innerHTML = "";
+                const workMove = document.getElementById("work-move");
+                workMove.style.display = 'none';
             });
         }
         catch (error) {
